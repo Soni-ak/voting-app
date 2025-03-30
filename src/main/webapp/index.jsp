@@ -36,12 +36,21 @@
             background-color: #218838;
         }
     </style>
+    <script>
+        function submitForm(event) {
+            event.preventDefault(); // Prevent default form submission
+            alert("Vote submitted successfully! Next voter, please enter your details."); // Show confirmation message
+            
+            // Reset the form fields
+            document.getElementById("voteForm").reset();
+        }
+    </script>
 </head>
 <body>
 
     <h2>👋 Hello to all! Welcome to the Voting Page 🎉</h2>
 
-    <form action="vote" method="post">
+    <form id="voteForm" onsubmit="submitForm(event)">
         <label><b>Name:</b></label> 
         <input type="text" name="voterName" required><br>
 
@@ -56,4 +65,3 @@
 
 </body>
 </html>
-
