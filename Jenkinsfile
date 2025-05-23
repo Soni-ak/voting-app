@@ -2,27 +2,42 @@ pipeline {
     agent any
 
     environment {
-        MAVEN_HOME = "/usr/share/maven"
-        JAVA_HOME = "/usr/lib/jvm/java-21-openjdk-amd64"
+        JAVA_HOME = '/usr/lib/jvm/java-21-openjdk-amd64'
+        PATH = "${JAVA_HOME}/bin:/usr/share/maven/bin:${env.PATH}"
     }
 
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                git 'https://github.com/Soni-ak/voting-app.git'
+                git url: 'https://github.com/Soni-ak/voting-app.git', branch: 'main'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                sh 'mvn clean compile'
             }
         }
 
-        stage('Deploy to Tomcat') {
+        stage('Test') {
             steps {
-                sh 'cp target/voting-app.war /opt/tomcat/webapps/'
+                sh 'mvn test'
             }
+        }
+
+        stage('Package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Build and packaging successful!"
+        }
+        failure {
+            echo "❌ Build failed. Check logs!"
         }
     }
 }
